@@ -7,19 +7,24 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.devsuperior.myfirstproject.entities.Category;
-import com.devsuperior.myfirstproject.entities.Product;
-import com.devsuperior.myfirstproject.repositories.CategoryRepository;
-import com.devsuperior.myfirstproject.repositories.ProductRepository;
+import com.devsuperior.myfirstproject.entities.Descricao;
+import com.devsuperior.myfirstproject.entities.Transacao;
+import com.devsuperior.myfirstproject.entities.formaPagamento;
+import com.devsuperior.myfirstproject.repositories.DescricaoRepository;
+import com.devsuperior.myfirstproject.repositories.FormaPagamentoRepository;
+import com.devsuperior.myfirstproject.repositories.TransacaoRepository;
 
 @SpringBootApplication
 public class MyfirstprojectApplication implements CommandLineRunner {
 
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private TransacaoRepository transacaoRepository;
 	
 	@Autowired
-	private ProductRepository productRepository;
+	private FormaPagamentoRepository formaPagamentoRepository;
+	
+	@Autowired
+	private DescricaoRepository descricaoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(MyfirstprojectApplication.class, args);
@@ -27,23 +32,33 @@ public class MyfirstprojectApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Category cat1 = new Category(null, "Electronics");
-		Category cat2 = new Category(null, "Books");
-
-		Product p1 = new Product(null, "TV", 2200.00, cat1);
-		Product p2 = new Product(null, "Domain Driven Design", 120.00, cat2);
-		Product p3 = new Product(null, "PS5", 2800.00, cat1);
-		Product p4 = new Product(null, "Docker", 100.00, cat2);
-
-		cat1.getProducts().addAll(Arrays.asList(p1, p3));
-		cat2.getProducts().addAll(Arrays.asList(p2, p4));
+	
+		formaPagamento fp1 = new formaPagamento(null, "AVISTA", "1"); 
+		formaPagamento fp2 = new formaPagamento(null, "PARCELADO LOJA", "6");
+		formaPagamento fp3 = new formaPagamento(null, "PARCELADO EMISSOR", "12");
 		
-		categoryRepository.save(cat1);
-		categoryRepository.save(cat2);
+		Descricao d1 = new Descricao(null, "50.00", "01/05/2021 18:30:00", "PetShop Mundo cão", "123456789-0", "1472569", "AUTORIZADO");
+		Descricao d2 = new Descricao(null, "50.00", "01/05/2021 18:30:00", "Mercado Jon", "666663333-0", "1472569", "NEGADO");
+		Descricao d3 = new Descricao(null, "50.00", "01/05/2021 18:30:00", "Restaurante do zé", "88888999-0", "1472569", "AUTORIZADO");
 		
-		productRepository.save(p1);
-		productRepository.save(p2);
-		productRepository.save(p3);
-		productRepository.save(p4);
+		Transacao t1 = new Transacao(null, "4444*******1234", fp1,d1);
+		Transacao t2 = new Transacao(null, "1111*******1234", fp2,d2);
+		Transacao t3 = new Transacao(null, "2222*******1234", fp3,d3);
+		Transacao t4 = new Transacao(null, "4444*******1234", fp2,d1);
+		
+		fp1.getTransactions().addAll(Arrays.asList(t1,t4));
+		
+		
+		formaPagamentoRepository.save(fp1);
+		formaPagamentoRepository.save(fp2);
+		formaPagamentoRepository.save(fp3);
+		descricaoRepository.save(d1);
+		descricaoRepository.save(d2);
+		descricaoRepository.save(d3);
+		transacaoRepository.save(t1);
+		transacaoRepository.save(t2);
+		transacaoRepository.save(t3);
+		
+
 	}
 }
